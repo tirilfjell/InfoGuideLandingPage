@@ -97,55 +97,6 @@ export default {
       contact_message: "",
       contact_notice: ""
     };
-  },
-  methods: {
-    async addEmail(email) {
-      var noticeMessage = "🎉 Your account has been reserved 🎉";
-      await Auth.createUserWithEmailAndPassword(
-        email,
-        this.randomPassword(20)
-      ).catch(function(error) {
-        if (error.code != "auth/email-already-in-use") {
-          noticeMessage = error.message;
-        }
-      });
-      this.message = noticeMessage;
-      this.email = "";
-    },
-
-    randomPassword(length) {
-      var chars =
-        "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
-      var password = "";
-      for (var x = 0; x < length; x++) {
-        var i = Math.floor(Math.random() * chars.length);
-        password += chars.charAt(i);
-      }
-      return password;
-    },
-
-    sendContactMessage() {
-      if (!this.validEmail(this.contact_email)) {
-        this.contact_notice = "The email address is badly formatted.";
-      } else if (this.contact_message.length < 10) {
-        this.contact_notice = "Your message is too short";
-      } else {
-        const url = `https://us-central1-travel-budget-eefcd.cloudfunctions.net/sendEmail?email_from=${
-          this.contact_email
-        }&message=${this.contact_message}`;
-        const requestOptions = {
-          method: "GET",
-          headers: { "Content-Type": "application/json" }
-        };
-        fetch(url, requestOptions);
-        this.show_contact = false;
-      }
-    },
-
-    validEmail(email) {
-      var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    }
   }
 };
 </script>
